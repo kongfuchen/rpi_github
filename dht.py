@@ -8,9 +8,10 @@ import RPi.GPIO as GPIO
 sensor=Adafruit_DHT.DHT11
 GPIO_DHT=4
 GPIO_IR=11
+GPIO_MQ_2=13
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(GPIO_IR,GPIO.IN)
-
+GPIO.setup(GPIO_MQ_2,GPIO.IN)
 #humidity, temperature = Adafruit_DHT.read_retry(sensor, gpio)
 #print('Temp={0:0.1f}*C  Humidity={1:0.1f}%'.format(temperature, humidity))
 url = "http://api.heclouds.com/devices/597808637/datapoints"
@@ -35,10 +36,20 @@ while True:
         	request = urllib2.urlopen(request)
 		print request.read()
 		if GPIO.input(GPIO_IR)==GPIO.HIGH:
-			IR=0
-		else: IR=1
-
+			IR=1
+		else: IR=0
 		values = { "datastreams": [ { "id": "ir", "datapoints": [{"value":IR}]}]}
+        	jdata = json.dumps(values)
+        	request = urllib2.Request(url,jdata)
+        	request.add_header('api-key',API_KEY)
+        	request.get_metmod = lambda:'POST'
+        	request = urllib2.urlopen(request)
+		print request.read()
+		if GPIO.input(GPIO_MQ_2)==GPIO.HIGH:
+			MQ_2=1
+		else: MQ_2=0
+
+		values = { "datastreams": [ { "id": "mq_2", "datapoints": [{"value":MQ_2}]}]}
         	jdata = json.dumps(values)
         	request = urllib2.Request(url,jdata)
         	request.add_header('api-key',API_KEY)
