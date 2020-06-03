@@ -6,7 +6,7 @@ import Adafruit_DHT
 import RPi.GPIO as GPIO
 #import datatime
 sensor=Adafruit_DHT.DHT11
-GPIO_DHT=4
+GPIO_DHT=17
 GPIO_IR=11
 GPIO_MQ_2=13
 GPIO.setmode(GPIO.BOARD)
